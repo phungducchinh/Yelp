@@ -18,7 +18,7 @@ class FiltersViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var delegate: FiltersViewControllerDelegate!
+    var delegate: FiltersViewControllerDelegate?
     
     let categories: [[String: String]] =
         [["name" : "Afghan", "code": "afghani"],
@@ -214,7 +214,7 @@ class FiltersViewController: UIViewController {
             }
         }
         if filters.count > 0 {
-            delegate.filtersViewController(filterVC: self, didUpdateFilters: filters)
+            delegate?.filtersViewController(filterVC: self, didUpdateFilters: filters)
         }
         
         dismiss(animated: true, completion: nil)
@@ -222,29 +222,25 @@ class FiltersViewController: UIViewController {
 
 }
 
-extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, switchCellDelegate{
+
+
+extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, FiltersCellDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "switchCell") as! SwitchCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
         
-        cell.categoryLabel.text = categories[indexPath.row]["name"]
+        cell.catogoriesLabel.text = categories[indexPath.row]["name"]
         cell.switchButton.isOn = switchStates[indexPath.row] ?? false
         cell.delegate = self
-        
         return cell
     }
     
-    func switchCell(switchCell: SwitchCell, didChangeValue value: Bool) {
-        
-        
-        let ip = tableView.indexPath(for: switchCell)
-        
+    func filtersCellDelegate(filterCell: FiltersCell, didValueChange value: Bool) {
+        let ip = tableView.indexPath(for: filterCell)
         switchStates[(ip?.row)!] = value
-        
     }
-    
 }

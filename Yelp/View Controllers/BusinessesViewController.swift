@@ -13,17 +13,17 @@ class BusinessesViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var businesses: [Business]!
     var name = [String]()
+     var searchBar = UISearchBar()
     override func viewDidLoad() {
         super.viewDidLoad()
         createSearchBar()
-
         tableView.delegate = self
         tableView.dataSource = self
         
         tableView.estimatedRowHeight = 100
         tableView.rowHeight = UITableViewAutomaticDimension
         
-        Business.search(with: "Thai") { (businesses: [Business]?, error: Error?) in
+        Business.search(with: "") { (businesses: [Business]?, error: Error?) in
             if let businesses = businesses {
                 self.businesses = businesses
 
@@ -59,7 +59,7 @@ class BusinessesViewController: UIViewController {
 }
 
 
-    extension BusinessesViewController:  UITableViewDataSource, UITableViewDelegate,  UISearchBarDelegate{
+extension BusinessesViewController:  UITableViewDataSource, UITableViewDelegate,   UISearchBarDelegate, FiltersViewControllerDelegate{
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             if businesses != nil {
                 return businesses.count
@@ -77,28 +77,21 @@ class BusinessesViewController: UIViewController {
             return cell
         }
         
-        func filterViewController(filterViewController: FiltersViewController, didUpdateFilter filters: [String], Deal: Bool, Distance: String, sort: YelpSortMode) {
-            
-            Business.search(with: "", sort: sort, categories: filters, deals: Deal) { (businesses: [Business]!, error: Error!) in
-                if Distance == "Auto" {
-                    self.businesses = businesses
-                } else {
-                    self.businesses.removeAll()
-                    var i = 0
-                    for business in businesses! {
-                        if business.distance == Distance {
-                            self.businesses.insert(business, at: i)
-                            i+=1
-                        }
-                    }
-                }
+    
+    func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String]) {
+        print(filters)
+        Business.search(with: "", sort: nil, categories: filters, deals: nil) { (businesses: [Business]?, error: Error?) in
+            if let businesses = businesses {
+                self.businesses = businesses
+                
+        
                 self.tableView.reloadData()
             }
         }
-
+    }
         
         func createSearchBar(){
-            let searchBar = UISearchBar()
+           
             searchBar.showsCancelButton = false
             searchBar.placeholder = "Search here"
             searchBar.delegate = self
