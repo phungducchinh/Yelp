@@ -32,4 +32,15 @@ class FiltersCell: UITableViewCell {
     @IBAction func onSwitch(_ sender: Any) {
         delegate.filtersCellDelegate(filterCell: self, didValueChange: switchButton.isOn)
     }
+    
+    func config(with name: String, isOn: Bool) {
+        catogoriesLabel.text = name
+        switchButton.isOn = isOn
+    }
+    
+    func switchUpdateValue() {
+        if delegate != nil {
+            delegate?.filtersCellDelegate(filterCell: self, didValueChange: switchButton.isOn)
+        }
+    }
 }

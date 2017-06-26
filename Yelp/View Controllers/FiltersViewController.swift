@@ -17,8 +17,14 @@ class FiltersViewController: UIViewController {
     
     
     @IBOutlet weak var tableView: UITableView!
-    
+   
     var delegate: FiltersViewControllerDelegate?
+    var isDeal: Bool = false
+    //var distance = [(name: String, value: Float?, isOn: Bool)]()
+    //var sortBy = [(name: String, value: YelpSortMode, isOn: Bool)]()
+
+    var sortBy = ["Best Match", "Distance", "Rating"]
+    var distance = ["Auto","0.3 mile","1 mile","5 miles","20 miles"]
     
     let categories: [[String: String]] =
         [["name" : "Afghan", "code": "afghani"],
@@ -226,21 +232,64 @@ class FiltersViewController: UIViewController {
 
 extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, FiltersCellDelegate{
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-        
-        cell.catogoriesLabel.text = categories[indexPath.row]["name"]
-        cell.switchButton.isOn = switchStates[indexPath.row] ?? false
-        cell.delegate = self
-        return cell
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0: return "Deal"
+        case 1: return "Distance"
+        case 2: return "Sort By"
+        default: return "Category"
+        }
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0 : return 1
+        case 1: return distance.count
+        case 2: return sortBy.count
+        default: return categories.count
+        }
+    }
+    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
+//        
+//        cell.catogoriesLabel.text = categories[indexPath.row]["name"]
+//        cell.switchButton.isOn = switchStates[indexPath.row] ?? false
+//        cell.delegate = self
+//        return cell
+//    }
     
     func filtersCellDelegate(filterCell: FiltersCell, didValueChange value: Bool) {
         let ip = tableView.indexPath(for: filterCell)
         switchStates[(ip?.row)!] = value
     }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
+            cell.config(with: "Offering a Deal", isOn: false)
+            cell.delegate = self
+            return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
+            cell.config(with: distance[indexPath.row], isOn: false)
+            return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
+            cell.config(with: sortBy[indexPath.row], isOn: false)
+            return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
+            //cell.config(with: categories[indexPath.row].name, isOn: false)
+            cell.config(with: categories[indexPath.row]["name"]!, isOn: false)
+            cell.delegate = self
+            return cell
+        }
+    }
+
 }

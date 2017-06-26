@@ -161,35 +161,8 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="8Wb-5p-O3C">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8Wb-5p-O3C" id="3Wd-AD-G8d">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hhhh" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iVo-gb-f74">
-                                                    <rect key="frame" x="10" y="10" width="39" height="23.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="images" translatesAutoresizingMaskIntoConstraints="NO" id="3MI-t0-lFL">
-                                                    <rect key="frame" x="262" y="-1.5" width="48" height="48"/>
-                                                </imageView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="iVo-gb-f74" firstAttribute="top" secondItem="3Wd-AD-G8d" secondAttribute="top" constant="10" id="1Ab-5K-E2U"/>
-                                                <constraint firstAttribute="trailing" secondItem="3MI-t0-lFL" secondAttribute="trailing" constant="10" id="UE0-6T-8bT"/>
-                                                <constraint firstItem="3MI-t0-lFL" firstAttribute="centerY" secondItem="iVo-gb-f74" secondAttribute="centerY" id="VTw-d9-Cfz"/>
-                                                <constraint firstAttribute="bottom" secondItem="iVo-gb-f74" secondAttribute="bottom" constant="10" id="ZYF-dw-ogm"/>
-                                                <constraint firstItem="iVo-gb-f74" firstAttribute="leading" secondItem="3Wd-AD-G8d" secondAttribute="leading" constant="10" id="aXJ-WN-udq"/>
-                                                <constraint firstItem="3MI-t0-lFL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iVo-gb-f74" secondAttribute="trailing" constant="10" id="dZd-RP-SAu"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="filterCell" id="PSX-SJ-bhe" customClass="FiltersCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PSX-SJ-bhe" id="FuY-Aq-seC">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -290,7 +263,4 @@
             <point key="canvasLocation" x="922.5" y="6.3380281690140849"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="images" width="48" height="48"/>
-    </resources>
 </document>
