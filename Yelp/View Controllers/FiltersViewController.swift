@@ -240,7 +240,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, swi
     
     func switchCell(switchCell: SwitchCell, didChangeValue value: Bool) {
         
-        print("iii")
+        
         let ip = tableView.indexPath(for: switchCell)
         
         switchStates[(ip?.row)!] = value
