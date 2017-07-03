@@ -161,8 +161,45 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="filterCell" id="PSX-SJ-bhe" customClass="FiltersCell" customModule="Yelp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="distanceCell" id="bt9-wN-zZZ" customClass="DataCell" customModule="Yelp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bt9-wN-zZZ" id="RfR-ca-NDl" customClass="DataCell" customModule="Yelp" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obA-3x-hLs">
+                                                    <rect key="frame" x="10" y="10" width="42" height="23"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="images" translatesAutoresizingMaskIntoConstraints="NO" id="TBb-At-weJ">
+                                                    <rect key="frame" x="278" y="5.5" width="32" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="32" id="87d-eM-7n2"/>
+                                                        <constraint firstAttribute="width" constant="32" id="pqG-iC-hBG"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="TBb-At-weJ" firstAttribute="centerY" secondItem="obA-3x-hLs" secondAttribute="centerY" id="CKH-s2-PET"/>
+                                                <constraint firstAttribute="bottom" secondItem="obA-3x-hLs" secondAttribute="bottom" constant="11" id="IXA-qK-MEt"/>
+                                                <constraint firstItem="obA-3x-hLs" firstAttribute="leading" secondItem="RfR-ca-NDl" secondAttribute="leading" constant="10" id="ZIM-w0-jgb"/>
+                                                <constraint firstAttribute="trailing" secondItem="TBb-At-weJ" secondAttribute="trailing" constant="10" id="byy-By-eXQ"/>
+                                                <constraint firstAttribute="bottom" secondItem="TBb-At-weJ" secondAttribute="bottom" constant="6.5" id="cpi-89-tvX"/>
+                                                <constraint firstItem="obA-3x-hLs" firstAttribute="top" secondItem="RfR-ca-NDl" secondAttribute="top" constant="10" id="g45-zj-GtY"/>
+                                                <constraint firstItem="TBb-At-weJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="obA-3x-hLs" secondAttribute="trailing" constant="10" id="gOi-6d-ooo"/>
+                                                <constraint firstItem="TBb-At-weJ" firstAttribute="top" secondItem="RfR-ca-NDl" secondAttribute="top" constant="5.5" id="mFZ-4j-uKg"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="distanceImg" destination="TBb-At-weJ" id="Qoy-Of-Blh"/>
+                                            <outlet property="nameLb" destination="obA-3x-hLs" id="jK0-dt-LvE"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="filterCell" id="PSX-SJ-bhe" customClass="FiltersCell" customModule="Yelp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PSX-SJ-bhe" id="FuY-Aq-seC">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -263,4 +300,7 @@
             <point key="canvasLocation" x="922.5" y="6.3380281690140849"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="images" width="48" height="48"/>
+    </resources>
 </document>

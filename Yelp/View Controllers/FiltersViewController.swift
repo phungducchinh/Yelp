@@ -23,10 +23,15 @@ class FiltersViewController: UIViewController {
     //var distance = [(name: String, value: Float?, isOn: Bool)]()
     //var sortBy = [(name: String, value: YelpSortMode, isOn: Bool)]()
 
-    var sortBy = ["Best Match", "Distance", "Rating"]
-    var distance = ["Auto","0.3 mile","1 mile","5 miles","20 miles"]
-    
-    let categories: [[String: String]] =
+    var sortBy = ["Best Match"]
+    var distance = ["Auto"]
+    var deal = false
+    var test = false
+    var cell: DataCell! = nil
+    var filterDistance = "Auto"
+    var sort = ["Best Match"]
+    var filterSort = YelpSortMode(rawValue: 0)
+    var categories: [[String: String]] =
         [["name" : "Afghan", "code": "afghani"],
          ["name" : "African", "code": "african"],
          ["name" : "American, New", "code": "newamerican"],
@@ -213,6 +218,7 @@ class FiltersViewController: UIViewController {
     }
     
     @IBAction func onSave(_ sender: UIBarButtonItem) {
+        
         var filters = [String]()
         for (row, isSelected) in switchStates{
             if isSelected{
@@ -222,7 +228,9 @@ class FiltersViewController: UIViewController {
         if filters.count > 0 {
             delegate?.filtersViewController(filterVC: self, didUpdateFilters: filters)
         }
-        
+        if filters.count == 0 {
+            tableView.reloadData()
+        }
         dismiss(animated: true, completion: nil)
     }
 
@@ -254,15 +262,7 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Fil
         }
     }
     
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-//        
-//        cell.catogoriesLabel.text = categories[indexPath.row]["name"]
-//        cell.switchButton.isOn = switchStates[indexPath.row] ?? false
-//        cell.delegate = self
-//        return cell
-//    }
-    
+
     func filtersCellDelegate(filterCell: FiltersCell, didValueChange value: Bool) {
         let ip = tableView.indexPath(for: filterCell)
         switchStates[(ip?.row)!] = value
@@ -272,24 +272,102 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Fil
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-            cell.config(with: "Offering a Deal", isOn: false)
+            cell.catogoriesLabel.text = "Offering a Deal"
             cell.delegate = self
+            cell.switchButton.isOn = deal
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-            cell.config(with: distance[indexPath.row], isOn: false)
+            cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell") as! DataCell
+            if distance.count != 1 {
+                cell.distanceImg.image = UIImage(named: "")
+            } else {
+                cell.distanceImg.image = UIImage(named: "down.png")
+            }
+            cell.nameLb.text = distance[indexPath.row]
             return cell
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-            cell.config(with: sortBy[indexPath.row], isOn: false)
+            cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell") as! DataCell
+            if distance.count != 1 {
+                cell.distanceImg.image = UIImage(named: "")
+            } else {
+                cell.distanceImg.image = UIImage(named: "down.png")
+            }
+            cell.nameLb.text = sort[indexPath.row]
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-            //cell.config(with: categories[indexPath.row].name, isOn: false)
-            cell.config(with: categories[indexPath.row]["name"]!, isOn: false)
+            cell.catogoriesLabel.text = categories[indexPath.row]["name"]
             cell.delegate = self
+            cell.switchButton.isOn = switchStates[indexPath.row] ?? false
             return cell
         }
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 1:
+            if indexPath.row == 0 {
+                if test == false {
+                    distance = ["Auto", "0.01 mi", "0.02 mi", "0.03 mi", "0.05 mi"]
+                    tableView.reloadData()
+                    cell.distanceImg.image = UIImage(named: "")
+                    test = true
+                } else if test == true {
+                    distance = [distance[indexPath.row]]
+                    tableView.reloadData()
+                    test = false
+                }
+            } else {
+                filterDistance = distance[indexPath.row]
+                cell.nameLb.text = filterDistance
+                distance = [distance[indexPath.row]]
+                tableView.reloadData()
+                test = false
+            }
+        case 2:
+            if indexPath.row == 0 {
+                if test == false {
+                    sort = ["Best Matched", "Distance", "Hightest Rated"]
+                    tableView.reloadData()
+                    cell.distanceImg.image = UIImage(named: "")
+                    test = true
+                } else if test == true {
+                    sort = [sort[indexPath.row]]
+                    tableView.reloadData()
+                    test = false
+                }
+            } else {
+                filterSort = YelpSortMode(rawValue: indexPath.row)
+                cell.nameLb.text = sort[indexPath.row]
+                sort = [sort[indexPath.row]]
+                tableView.reloadData()
+                test = false
+            }
+           
+            tableView.reloadData()
+        default : break
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch section {
+        case 0:
+            return 0
+        case 4:
+            return 0
+        default:
+            return 50
+        }
+    }
+    
+    func filterCell(filterCell: FiltersCell, didChangeValue value: Bool) {
+        let indexpath = tableView.indexPath(for: filterCell)
+        switchStates[(indexpath?.row)!] = value
+        print("%i", indexpath!)
+    }
+    
+    func filterDealCell(filterDealCell: DataCell, didChangeValue value: Bool) {
+        deal = value
+        print(deal)
+    }
 }
