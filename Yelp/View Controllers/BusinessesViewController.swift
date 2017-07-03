@@ -13,7 +13,8 @@ class BusinessesViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var businesses: [Business]!
     var name = [String]()
-     var searchBar = UISearchBar()
+    var searchBar = UISearchBar()
+    var filterMode = Filter()
     override func viewDidLoad() {
         super.viewDidLoad()
         createSearchBar()
@@ -53,13 +54,13 @@ class BusinessesViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let navController = segue.destination as! UINavigationController
         let filterVC = navController.viewControllers.first as! FiltersViewController
-        filterVC.delegate = self as! FiltersViewControllerDelegate
+        filterVC.delegate = self as! FilterViewControllerDelegate
     }
 
 }
 
 
-extension BusinessesViewController:  UITableViewDataSource, UITableViewDelegate,   UISearchBarDelegate, FiltersViewControllerDelegate{
+extension BusinessesViewController:  UITableViewDataSource, UITableViewDelegate,   UISearchBarDelegate, FilterViewControllerDelegate{
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             if businesses != nil {
                 return businesses.count
@@ -78,18 +79,52 @@ extension BusinessesViewController:  UITableViewDataSource, UITableViewDelegate,
         }
         
     
-    func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String]) {
-        print(filters)
-        Business.search(with: "", sort: nil, categories: filters, deals: nil) { (businesses: [Business]?, error: Error?) in
+    func filterUpdate(didUpdate: Filter) {
+        filterMode = didUpdate
+        
+        var distance: Float?
+        var categories = [String]()
+        var sortBy = YelpSortMode(rawValue: 0)
+        
+        for item in filterMode.categories {
+            if item.isOn {
+                categories.append(item.code)
+            }
+        }
+        
+        for item in filterMode.distance {
+            if item.isOn {
+                distance = item.value
+                break
+            }
+        }
+        for item in filterMode.sortBy {
+            if item.isOn {
+                sortBy = item.value
+                break
+            }
+        }
+//        func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String]) {
+//            print(filters)
+//        Business.search(with: "", sort: nil, categories: filters, deals: nil) { (businesses: [Business]?, error: Error?) in
+//            if let businesses = businesses {
+//                self.businesses = businesses
+//                
+//                
+//                self.tableView.reloadData()
+//            }
+//        }
+//        }
+        Business.search(with: searchBar.text!, sort: sortBy, categories: categories, distance: distance, deals: filterMode.isDeal) { (businesses, error) in
             if let businesses = businesses {
                 self.businesses = businesses
                 
-        
                 self.tableView.reloadData()
             }
         }
-    }
         
+    }
+    
         func createSearchBar(){
            
             searchBar.showsCancelButton = false

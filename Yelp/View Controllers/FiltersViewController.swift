@@ -8,9 +8,8 @@
 
 import UIKit
 
-protocol FiltersViewControllerDelegate {
-    func filtersViewController(filterVC: FiltersViewController, didUpdateFilters filters: [String])
-    
+protocol FilterViewControllerDelegate {
+    func filterUpdate(didUpdate: Filter)
 }
 
 class FiltersViewController: UIViewController {
@@ -18,228 +17,34 @@ class FiltersViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
    
-    var delegate: FiltersViewControllerDelegate?
-    var isDeal: Bool = false
-    //var distance = [(name: String, value: Float?, isOn: Bool)]()
-    //var sortBy = [(name: String, value: YelpSortMode, isOn: Bool)]()
+    var delegate: FilterViewControllerDelegate?
 
-    var sortBy = ["Best Match"]
-    var distance = ["Auto"]
-    var deal = false
-    var test = false
-    var cell: DataCell! = nil
-    var filterDistance = "Auto"
-    var sort = ["Best Match"]
-    var filterSort = YelpSortMode(rawValue: 0)
-    var categories: [[String: String]] =
-        [["name" : "Afghan", "code": "afghani"],
-         ["name" : "African", "code": "african"],
-         ["name" : "American, New", "code": "newamerican"],
-         ["name" : "American, Traditional", "code": "tradamerican"],
-         ["name" : "Arabian", "code": "arabian"],
-         ["name" : "Argentine", "code": "argentine"],
-         ["name" : "Armenian", "code": "armenian"],
-         ["name" : "Asian Fusion", "code": "asianfusion"],
-         ["name" : "Asturian", "code": "asturian"],
-         ["name" : "Australian", "code": "australian"],
-         ["name" : "Austrian", "code": "austrian"],
-         ["name" : "Baguettes", "code": "baguettes"],
-         ["name" : "Bangladeshi", "code": "bangladeshi"],
-         ["name" : "Barbeque", "code": "bbq"],
-         ["name" : "Basque", "code": "basque"],
-         ["name" : "Bavarian", "code": "bavarian"],
-         ["name" : "Beer Garden", "code": "beergarden"],
-         ["name" : "Beer Hall", "code": "beerhall"],
-         ["name" : "Beisl", "code": "beisl"],
-         ["name" : "Belgian", "code": "belgian"],
-         ["name" : "Bistros", "code": "bistros"],
-         ["name" : "Black Sea", "code": "blacksea"],
-         ["name" : "Brasseries", "code": "brasseries"],
-         ["name" : "Brazilian", "code": "brazilian"],
-         ["name" : "Breakfast & Brunch", "code": "breakfast_brunch"],
-         ["name" : "British", "code": "british"],
-         ["name" : "Buffets", "code": "buffets"],
-         ["name" : "Bulgarian", "code": "bulgarian"],
-         ["name" : "Burgers", "code": "burgers"],
-         ["name" : "Burmese", "code": "burmese"],
-         ["name" : "Cafes", "code": "cafes"],
-         ["name" : "Cafeteria", "code": "cafeteria"],
-         ["name" : "Cajun/Creole", "code": "cajun"],
-         ["name" : "Cambodian", "code": "cambodian"],
-         ["name" : "Canadian", "code": "New)"],
-         ["name" : "Canteen", "code": "canteen"],
-         ["name" : "Caribbean", "code": "caribbean"],
-         ["name" : "Catalan", "code": "catalan"],
-         ["name" : "Chech", "code": "chech"],
-         ["name" : "Cheesesteaks", "code": "cheesesteaks"],
-         ["name" : "Chicken Shop", "code": "chickenshop"],
-         ["name" : "Chicken Wings", "code": "chicken_wings"],
-         ["name" : "Chilean", "code": "chilean"],
-         ["name" : "Chinese", "code": "chinese"],
-         ["name" : "Comfort Food", "code": "comfortfood"],
-         ["name" : "Corsican", "code": "corsican"],
-         ["name" : "Creperies", "code": "creperies"],
-         ["name" : "Cuban", "code": "cuban"],
-         ["name" : "Curry Sausage", "code": "currysausage"],
-         ["name" : "Cypriot", "code": "cypriot"],
-         ["name" : "Czech", "code": "czech"],
-         ["name" : "Czech/Slovakian", "code": "czechslovakian"],
-         ["name" : "Danish", "code": "danish"],
-         ["name" : "Delis", "code": "delis"],
-         ["name" : "Diners", "code": "diners"],
-         ["name" : "Dumplings", "code": "dumplings"],
-         ["name" : "Eastern European", "code": "eastern_european"],
-         ["name" : "Ethiopian", "code": "ethiopian"],
-         ["name" : "Fast Food", "code": "hotdogs"],
-         ["name" : "Filipino", "code": "filipino"],
-         ["name" : "Fish & Chips", "code": "fishnchips"],
-         ["name" : "Fondue", "code": "fondue"],
-         ["name" : "Food Court", "code": "food_court"],
-         ["name" : "Food Stands", "code": "foodstands"],
-         ["name" : "French", "code": "french"],
-         ["name" : "French Southwest", "code": "sud_ouest"],
-         ["name" : "Galician", "code": "galician"],
-         ["name" : "Gastropubs", "code": "gastropubs"],
-         ["name" : "Georgian", "code": "georgian"],
-         ["name" : "German", "code": "german"],
-         ["name" : "Giblets", "code": "giblets"],
-         ["name" : "Gluten-Free", "code": "gluten_free"],
-         ["name" : "Greek", "code": "greek"],
-         ["name" : "Halal", "code": "halal"],
-         ["name" : "Hawaiian", "code": "hawaiian"],
-         ["name" : "Heuriger", "code": "heuriger"],
-         ["name" : "Himalayan/Nepalese", "code": "himalayan"],
-         ["name" : "Hong Kong Style Cafe", "code": "hkcafe"],
-         ["name" : "Hot Dogs", "code": "hotdog"],
-         ["name" : "Hot Pot", "code": "hotpot"],
-         ["name" : "Hungarian", "code": "hungarian"],
-         ["name" : "Iberian", "code": "iberian"],
-         ["name" : "Indian", "code": "indpak"],
-         ["name" : "Indonesian", "code": "indonesian"],
-         ["name" : "International", "code": "international"],
-         ["name" : "Irish", "code": "irish"],
-         ["name" : "Island Pub", "code": "island_pub"],
-         ["name" : "Israeli", "code": "israeli"],
-         ["name" : "Italian", "code": "italian"],
-         ["name" : "Japanese", "code": "japanese"],
-         ["name" : "Jewish", "code": "jewish"],
-         ["name" : "Kebab", "code": "kebab"],
-         ["name" : "Korean", "code": "korean"],
-         ["name" : "Kosher", "code": "kosher"],
-         ["name" : "Kurdish", "code": "kurdish"],
-         ["name" : "Laos", "code": "laos"],
-         ["name" : "Laotian", "code": "laotian"],
-         ["name" : "Latin American", "code": "latin"],
-         ["name" : "Live/Raw Food", "code": "raw_food"],
-         ["name" : "Lyonnais", "code": "lyonnais"],
-         ["name" : "Malaysian", "code": "malaysian"],
-         ["name" : "Meatballs", "code": "meatballs"],
-         ["name" : "Mediterranean", "code": "mediterranean"],
-         ["name" : "Mexican", "code": "mexican"],
-         ["name" : "Middle Eastern", "code": "mideastern"],
-         ["name" : "Milk Bars", "code": "milkbars"],
-         ["name" : "Modern Australian", "code": "modern_australian"],
-         ["name" : "Modern European", "code": "modern_european"],
-         ["name" : "Mongolian", "code": "mongolian"],
-         ["name" : "Moroccan", "code": "moroccan"],
-         ["name" : "New Zealand", "code": "newzealand"],
-         ["name" : "Night Food", "code": "nightfood"],
-         ["name" : "Norcinerie", "code": "norcinerie"],
-         ["name" : "Open Sandwiches", "code": "opensandwiches"],
-         ["name" : "Oriental", "code": "oriental"],
-         ["name" : "Pakistani", "code": "pakistani"],
-         ["name" : "Parent Cafes", "code": "eltern_cafes"],
-         ["name" : "Parma", "code": "parma"],
-         ["name" : "Persian/Iranian", "code": "persian"],
-         ["name" : "Peruvian", "code": "peruvian"],
-         ["name" : "Pita", "code": "pita"],
-         ["name" : "Pizza", "code": "pizza"],
-         ["name" : "Polish", "code": "polish"],
-         ["name" : "Portuguese", "code": "portuguese"],
-         ["name" : "Potatoes", "code": "potatoes"],
-         ["name" : "Poutineries", "code": "poutineries"],
-         ["name" : "Pub Food", "code": "pubfood"],
-         ["name" : "Rice", "code": "riceshop"],
-         ["name" : "Romanian", "code": "romanian"],
-         ["name" : "Rotisserie Chicken", "code": "rotisserie_chicken"],
-         ["name" : "Rumanian", "code": "rumanian"],
-         ["name" : "Russian", "code": "russian"],
-         ["name" : "Salad", "code": "salad"],
-         ["name" : "Sandwiches", "code": "sandwiches"],
-         ["name" : "Scandinavian", "code": "scandinavian"],
-         ["name" : "Scottish", "code": "scottish"],
-         ["name" : "Seafood", "code": "seafood"],
-         ["name" : "Serbo Croatian", "code": "serbocroatian"],
-         ["name" : "Signature Cuisine", "code": "signature_cuisine"],
-         ["name" : "Singaporean", "code": "singaporean"],
-         ["name" : "Slovakian", "code": "slovakian"],
-         ["name" : "Soul Food", "code": "soulfood"],
-         ["name" : "Soup", "code": "soup"],
-         ["name" : "Southern", "code": "southern"],
-         ["name" : "Spanish", "code": "spanish"],
-         ["name" : "Steakhouses", "code": "steak"],
-         ["name" : "Sushi Bars", "code": "sushi"],
-         ["name" : "Swabian", "code": "swabian"],
-         ["name" : "Swedish", "code": "swedish"],
-         ["name" : "Swiss Food", "code": "swissfood"],
-         ["name" : "Tabernas", "code": "tabernas"],
-         ["name" : "Taiwanese", "code": "taiwanese"],
-         ["name" : "Tapas Bars", "code": "tapas"],
-         ["name" : "Tapas/Small Plates", "code": "tapasmallplates"],
-         ["name" : "Tex-Mex", "code": "tex-mex"],
-         ["name" : "Thai", "code": "thai"],
-         ["name" : "Traditional Norwegian", "code": "norwegian"],
-         ["name" : "Traditional Swedish", "code": "traditional_swedish"],
-         ["name" : "Trattorie", "code": "trattorie"],
-         ["name" : "Turkish", "code": "turkish"],
-         ["name" : "Ukrainian", "code": "ukrainian"],
-         ["name" : "Uzbek", "code": "uzbek"],
-         ["name" : "Vegan", "code": "vegan"],
-         ["name" : "Vegetarian", "code": "vegetarian"],
-         ["name" : "Venison", "code": "venison"],
-         ["name" : "Vietnamese", "code": "vietnamese"],
-         ["name" : "Wok", "code": "wok"],
-         ["name" : "Wraps", "code": "wraps"],
-         ["name" : "Yugoslav", "code": "yugoslav"]]
-
-    var switchStates = [Int: Bool]()
+    var filterModelBefore = Filter()
+    var filterModeAfter = Filter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.delegate = self
         tableView.dataSource = self
-
+        tableView.delegate = self
+        
+        filterModeAfter = filterModelBefore
         // Do any additional setup after loading the view.
     }
 
     @IBAction func onCancel(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true) {
+            self.delegate?.filterUpdate(didUpdate: self.filterModelBefore)
+        }
     }
     
     @IBAction func onSave(_ sender: UIBarButtonItem) {
-        
-        var filters = [String]()
-        for (row, isSelected) in switchStates{
-            if isSelected{
-                filters.append(categories[row]["code"]!)
-            }
+        self.dismiss(animated: true) {
+            self.delegate?.filterUpdate(didUpdate: self.filterModeAfter)
         }
-        if filters.count > 0 {
-            delegate?.filtersViewController(filterVC: self, didUpdateFilters: filters)
-        }
-        if filters.count == 0 {
-            tableView.reloadData()
-        }
-        dismiss(animated: true, completion: nil)
     }
 
 }
-
-
-
-extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, FiltersCellDelegate{
-    
+extension FiltersViewController: UITableViewDelegate, UITableViewDataSource{
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
@@ -249,125 +54,81 @@ extension FiltersViewController: UITableViewDelegate, UITableViewDataSource, Fil
         case 0: return "Deal"
         case 1: return "Distance"
         case 2: return "Sort By"
-        default: return "Category"
+        case 3: return "Category"
+        default: return ""
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0 : return 1
-        case 1: return distance.count
-        case 2: return sortBy.count
-        default: return categories.count
+        case 1: return filterModeAfter.distance.count
+        case 2: return filterModeAfter.sortBy.count
+        case 3: return filterModeAfter.categories.count
+        default: return 0
         }
-    }
-    
-
-    func filtersCellDelegate(filterCell: FiltersCell, didValueChange value: Bool) {
-        let ip = tableView.indexPath(for: filterCell)
-        switchStates[(ip?.row)!] = value
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-            cell.catogoriesLabel.text = "Offering a Deal"
+            cell.config(with: "Offering a Deal", isOn: filterModeAfter.isDeal)
             cell.delegate = self
-            cell.switchButton.isOn = deal
             return cell
         case 1:
-            cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell") as! DataCell
-            if distance.count != 1 {
-                cell.distanceImg.image = UIImage(named: "")
-            } else {
-                cell.distanceImg.image = UIImage(named: "down.png")
-            }
-            cell.nameLb.text = distance[indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell") as! DataCell
+            cell.config(name: filterModeAfter.distance[indexPath.row].name, isCheck: filterModeAfter.distance[indexPath.row].isOn)
+            print("\(cell.nameLb.text) - \(cell.isCheck)")
             return cell
         case 2:
-            cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell") as! DataCell
-            if distance.count != 1 {
-                cell.distanceImg.image = UIImage(named: "")
-            } else {
-                cell.distanceImg.image = UIImage(named: "down.png")
-            }
-            cell.nameLb.text = sort[indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: "distanceCell") as! DataCell
+            cell.config(name: filterModeAfter.sortBy[indexPath.row].name, isCheck: filterModeAfter.sortBy[indexPath.row].isOn)
+            return cell
+        case 3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
+            cell.config(with: filterModeAfter.categories[indexPath.row].name, isOn: filterModeAfter.categories[indexPath.row].isOn)
+            cell.delegate = self
             return cell
         default:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell") as! FiltersCell
-            cell.catogoriesLabel.text = categories[indexPath.row]["name"]
-            cell.delegate = self
-            cell.switchButton.isOn = switchStates[indexPath.row] ?? false
+            let cell = UITableViewCell()
             return cell
         }
     }
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
+        case 0: break
         case 1:
-            if indexPath.row == 0 {
-                if test == false {
-                    distance = ["Auto", "0.01 mi", "0.02 mi", "0.03 mi", "0.05 mi"]
-                    tableView.reloadData()
-                    cell.distanceImg.image = UIImage(named: "")
-                    test = true
-                } else if test == true {
-                    distance = [distance[indexPath.row]]
-                    tableView.reloadData()
-                    test = false
+            for index in 0...filterModeAfter.distance.count-1 {
+                filterModeAfter.distance[index].isOn = false
+                if index == indexPath.row {
+                    filterModeAfter.distance[index].isOn = true
                 }
-            } else {
-                filterDistance = distance[indexPath.row]
-                cell.nameLb.text = filterDistance
-                distance = [distance[indexPath.row]]
-                tableView.reloadData()
-                test = false
             }
-        case 2:
-            if indexPath.row == 0 {
-                if test == false {
-                    sort = ["Best Matched", "Distance", "Hightest Rated"]
-                    tableView.reloadData()
-                    cell.distanceImg.image = UIImage(named: "")
-                    test = true
-                } else if test == true {
-                    sort = [sort[indexPath.row]]
-                    tableView.reloadData()
-                    test = false
-                }
-            } else {
-                filterSort = YelpSortMode(rawValue: indexPath.row)
-                cell.nameLb.text = sort[indexPath.row]
-                sort = [sort[indexPath.row]]
-                tableView.reloadData()
-                test = false
-            }
-           
             tableView.reloadData()
-        default : break
+        case 2:
+            for index in 0...filterModeAfter.sortBy.count-1 {
+                filterModeAfter.sortBy[index].isOn = false
+                if index == indexPath.row {
+                    filterModeAfter.sortBy[index].isOn = true
+                }
+            }
+            tableView.reloadData()
+        default: break
         }
     }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch section {
-        case 0:
-            return 0
-        case 4:
-            return 0
-        default:
-            return 50
+}
+
+// MARK: delegate
+    extension FiltersViewController: FiltersCellDelegate {
+        func filtersCellDelegate(filterCell: FiltersCell, didValueChange value : Bool) {
+            let index = tableView.indexPath(for: filterCell)
+            if index?.section == 0 {
+                filterModeAfter.isDeal = value
+            }else if index?.section == 3 {
+                filterModeAfter.categories[(index?.row)!].isOn = value
+            }
+            print("\(filterModeAfter.categories[(index?.row)!].name) : \(filterModeAfter.categories[(index?.row)!].isOn) ")
         }
-    }
-    
-    func filterCell(filterCell: FiltersCell, didChangeValue value: Bool) {
-        let indexpath = tableView.indexPath(for: filterCell)
-        switchStates[(indexpath?.row)!] = value
-        print("%i", indexpath!)
-    }
-    
-    func filterDealCell(filterDealCell: DataCell, didChangeValue value: Bool) {
-        deal = value
-        print(deal)
-    }
+        
 }

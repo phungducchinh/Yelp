@@ -20,6 +20,8 @@ class FiltersCell: UITableViewCell {
     var delegate : FiltersCellDelegate!
     override func awakeFromNib() {
         super.awakeFromNib()
+        switchButton.isOn = false
+        switchButton.addTarget(self, action: #selector(switchUpdateValue), for: .valueChanged)
         // Initialization code
     }
 
